@@ -49,7 +49,7 @@ Report Modifier POC - Change Your Reports For Third Parties Without Rewriting Th
 
 **Limited Error Handling** – Error handling is not robust – this tool is not yet guaranteed for fitness of duty or for widespread release. In the beta, there will be planned Robust error handling, with all known current error messages and types documented and will be handled with a specialized error class and procedures at the release of the beta.
 
-**Multiple optional flags** – The capability to do multiple redactions or to do blur and shrinking efficiently is not yet implemented. This means that a single redaction should be handled differently than multiple, and the folder/file should only have to be read in once, rather than multiple times as it is done now. This is planned to be fixed in the beta.
+**Multiple optional flags** – Using multiple switches isn't yet efficient. You can use multiple switches for this proof of concept, but it relies on hacks and os processes to make it work, which is less than optimal.
 
 **Word XML avoidance** – Right now, word's xml structures are largely left alone. This is currently being tackled, but it was determined to be too complex to be completely tackled before the POC. Indeed, some known issues are due to XML not being updated after images are modified. Current python libraries modify and change the xml only in certain ways, which means that to resolve these issues, word's xml libraries have to be manually loaded.
 
