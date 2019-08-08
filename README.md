@@ -18,6 +18,13 @@ Report Modifier POC - Change Your Reports For Third Parties Without Rewriting Th
 	cd <path to local ReportMod repo>
 	pip3 install -r requirements.txt #Make sure you're install via python3, pip works if Python3 is your only install
 
+**To Make an Executable in Windows**
+
+	pip3 install pyinstaller
+	>Ensure pyinstaller is in your path<
+	cd <path to local ReportMod repo>
+	pyinstaller -F ReportMod.py
+
 **Supported File Formats:**
 
 	Docx
