@@ -29,13 +29,14 @@ Report Modifier POC - Change Your Reports For Third Parties Without Rewriting Th
 
 **Arguments:**
 
-	--html		Input html folder – If --docx is not chosen, this is necessary
-	--docx		Input docx file – If --html is not chosen, this is necessary
-	-o		Name of output folder or file – This is always necessary
+	--html		Input html folder Flag – If --docx is not chosen, this is necessary
+	--docx		Input docx file Flag – If --html is not chosen, this is necessary
+	-i		The name of the initial report - necessary
+	-o		Name of output folder or file – necessary
 	-e		Regex String to search for and replace - Optional
-	-s		Redacted text string to substitute for the regex matches – default is '*****'
-	-b		Blur images - Optional
-	-t		Shrink images – Optional
+	-s		String to replace matches - Default is ***** - Optional
+	-b		Blur all images of the report - Optional
+	-t		Shrink all images of the report - HTML only right now – Optional
 
 **Current POC Limitations**
 
