@@ -1,5 +1,5 @@
 # ReportMod
-Report Modifier POC - Change Your Reports For Third Parties Without Rewriting The Dang Thing Again
+Report Modifier Proof Of Concept - Change Your Reports For Third Parties Without Rewriting The Dang Thing Again
 
 **Purpose:**
 	ReportMod is a tool that takes a single report, copies it, and modifies the copied report so that it can be handed to third parties. The modifications it does to the copied report are done to redact or obscure information.
