@@ -10,6 +10,7 @@ import re
 import xml.etree.ElementTree as ET
 from docx import Document
 import argparse
+import time
 #from docx.shared import Inches
 
 ################################################################################
@@ -204,10 +205,10 @@ class Docx:
         # Thanks to mata for his/her help
         # https://stackoverflow.com/questions/50963852/remove-all-images-from-docx-files
         if ofile is None and osp.splitext(ifile)[1] == '.docx':
-            ofile = ifile.replace('.docx','_redacted.docx')
+            ofile = ifile.replace('.docx','.redacted.docx')
         elif ofile is None and osp.splitext(ifile)[1] == '.odt':
-            ofile = ifile.replace('.odt','_redacted.odt')
-        else:
+            ofile = ifile.replace('.odt','.redacted.odt')
+        elif ofile is None:
             ofile = osp.splitext(ifile)[0] + '.redacted.' \
                     + osp.splitext(ifile)[1]
         izip = ZipFile(ifile)
@@ -219,7 +220,7 @@ class Docx:
                 img = Image.open(io.BytesIO(content)) # Load Picture to memory
                 img = img.convert().filter(Base.blur) # Blur it
                 imgBuffer = io.BytesIO()
-                img.saveNW3C    (imgBuffer, osp.splitext(node.filename)[1][1:])
+                img.save(imgBuffer, osp.splitext(node.filename)[1][1:])
                 # Change the XML so that it points to the blurred image, not original
                 content = imgBuffer.getvalue()
                 node.file_size = len(content)
@@ -306,7 +307,7 @@ class HTML:
     def ShrinkImages():
         for root, dirs, files in os.walk(Base.wdir):
             for file in files:
-                if osp.splitext(file)[1] in Base.pictures:
+                if osp.splitext(file)[1].lower() in Base.pictures:
                     imgsize = Base.Shrink(osp.join(root, file))
                     fh = open(osp.join(root, file), 'rb')
                     img = Image.open(io.BytesIO(fh.read()))
@@ -349,37 +350,59 @@ class HTML:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='ReportMod POC - Report Modifier Tool to change reports on the fly')
     DocFileType = parser.add_mutually_exclusive_group(required=True)
-    DocFileType.add_argument('--html', action='store_true', help='Input html folder – If docx is not chosen, this is necessary')    
-    DocFileType.add_argument('--docx', action='store_true', help='Input docx file – If html is not chosen, this is necessary')    
+    DocFileType.add_argument('--html', action='store_true', help='Input html folder – Necessary if docx is not chosen')    
+    DocFileType.add_argument('--docx', action='store_true', help='Input docx file – Necessary if html is not chosen')    
     parser.add_argument('-i', dest='InputReport', required=True, help='The name of the initial report - necessary') 
-    parser.add_argument('-o', dest='OutputReport', required=True, help='Name of output folder or file – This is always necessary')
+    parser.add_argument('-o', dest='OutputReport', required=True, help='Name of output folder or file – necessary')
     parser.add_argument('-e', dest='RegexString', help='Regex String to search for and replace - Optional')
-    parser.add_argument('-s', dest='RedactionString', help='String to replace matches. Default is ***** - Optional')
+    parser.add_argument('-s', dest='RedactionString', help='String to replace matches - Default is ***** - Optional')
     parser.add_argument('-b', action='store_true', help='Blur all images of the report')
-    parser.add_argument('-t', action='store_true', help='Shrink all images of the report')
+    parser.add_argument('-t', action='store_true', help='Shrink all images of the report - HTML only right now')
     args = parser.parse_args()
 
-    # Set working directory to Output Report's folder
-    Base.cd(osp.abspath(args.OutputReport))
+    if osp.exists(args.OutputReport):
+        print("\nOutput Report already exists. Will not overwrite file")
+        exit()
 
     if args.html:
-        HTML.SetReports(args.i, args.o)
-        if args.e:
-            if args.s:
-                HTML.RedactRegex(args.e, args.s)
+        HTML.SetReports(args.InputReport, args.OutputReport)
+        # Set working directory to Output Report's folder
+        Base.cd(osp.abspath(args.OutputReport))
+        if args.RegexString:
+            if args.RedactionString:
+                HTML.RedactRegex(args.RegexString, args.RedactionString)
             else:
-                HTML.RedactRegex(args.e)
+                HTML.RedactRegex(args.RegexString)
         if args.t:
             HTML.ShrinkImages()
         if args.b:
             HTML.BlurImages()
     elif args.docx:
-        if args.e:
-            if args.s:
-                Docx.RedactRegex(args.i, args.e, args.s, args.o)
+        Base.cd(osp.abspath(osp.join(args.OutputReport, '..')))
+        if args.RegexString:
+            if args.b:
+                tmpReport = osp.splitext(args.OutputReport)[0] + '.blur' \
+                                + osp.splitext(args.OutputReport)[1]
+                Docx.BlurImages(args.InputReport, tmpReport)
+                if args.RedactionString:
+                    Docx.RedactRegex(tmpReport, args.RegexString,
+                                     args.RedactionString, args.OutputReport)
+                    os.remove(tmpReport)
+                    exit()
+                else:
+                    Docx.RedactRegex(tmpReport, args.RegexString,
+                                     ofile=args.OutputReport)
+                    os.remove(tmpReport)
+                    exit()
             else:
-                Docx.RedactRegex(args.i, args.e, ofile=args.o)
+                if args.RedactionString:
+                    Docx.RedactRegex(args.InputReport, args.RegexString,
+                                     args.RedactionString, args.OutputReport)
+                else:
+                    Docx.RedactRegex(args.InputReport, args.RegexString,
+                                     ofile=args.OutputReport)
         if args.t:
-            print('POC ERROR: No Shrinking exists for Docx')
-        if args.b:
-            Docx.BlurImages(args.i, args.o)
+            print('\nProof Of Concept Limit: No Shrinking exists yet for Docx')
+        else:
+            if args.b:
+                Docx.BlurImages(args.InputReport, args.OutputReport)
