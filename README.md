@@ -32,7 +32,7 @@ Report Modifier POC - Change Your Reports For Third Parties Without Rewriting Th
 	Future Formats: PDF, doc, odt, xlsx, xls
 
 **Usage:**
-	ReportMod.py [--html | --docx] <ifile/ifolder> -o <ofile/ofolder> [-e regex] [-d redactedtext] [-b] [-s] [-r]
+	ReportMod.py (--html | --docx) -i <ifile/ifolder> -o <ofile/ofolder> [-e regex] [-s redactedtext] [-b] [-t]
 
 **Arguments:**
 
