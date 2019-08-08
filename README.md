@@ -16,7 +16,7 @@ Report Modifier POC - Change Your Reports For Third Parties Without Rewriting Th
 
 	git clone https://github.com/ConchoPecan/ReportMod.git <desired homepath for cloned repo>
 	cd <path to local ReportMod repo>
-	pip install -r requirements.txt
+	pip3 install -r requirements.txt #Make sure you're install via python3, pip works if Python3 is your only install
 
 **Supported File Formats:**
 
