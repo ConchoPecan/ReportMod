@@ -45,6 +45,30 @@ You should notice a new file created that says CasePaper.redacted.docx. This is 
 
 **ReportMod.HTML**
 
+HTML is a lot easier to work with, so it has more features. Before you EVER do anything with RM.HTML, you must set the report up. We'll assume HTML reports are in the same area as the docx report was:
 
+	RM.HTML.SetReports(r"c:\Users\ConchoPecan\Documents\reports\HTMLReport", r"c:\Users\ConchoPecan\Documents\redacted\HTMLReport")
+
+We know have a HTML report that is EXACTLY indentical to original report. Any time we shrink, blur or use regex, it is affecting the copy. HTML is a little safer this way. Docx will one day be this safe.
+
+RM.HTML.ShrinkImages:
+
+	RM.HTML.ShrinkImages()
+
+Simple, as it should be. Usually I shrink before blurring to save time. Doing so will typically mean that when you blur later, your images become just indistinct color stains though, so if you got the time, blurring then shrinking will be better.
+
+RM.HTML.BlurImages:
+
+	RM.HTML.BlurImages()
+
+Sometimes, you need more than shrinkage to prevent damaged psyches. Blurring will do that for you. This is probably the most time intensive part of ReportMod though, so take that in consideration.
+
+RM.HTML.RedactRegex:
+
+	RM.HTML.RedactRegex(r"Sensitive Information", r"*****")
+
+This does the same thing as it does in Docx. Takes the report, and ANYWHERE that exists in the HTML document... provided it's in text form and not in code pages.
+
+The great thing about HTML is that once you set the report, everything you do will only affect the copy of the report, and nothing else.
 
 **Command Line**
