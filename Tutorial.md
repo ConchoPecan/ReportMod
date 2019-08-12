@@ -72,3 +72,48 @@ This does the same thing as it does in Docx. Takes the report, and ANYWHERE that
 The great thing about HTML is that once you set the report, everything you do will only affect the copy of the report, and nothing else.
 
 **Command Line**
+
+Arguments:
+	--html		Input html folder Flag – If --docx is not chosen, this is necessary
+	--docx		Input docx file Flag – If --html is not chosen, this is necessary
+	-i		The name of the initial report - necessary
+	-o		Name of output folder or file – necessary
+	-e		Regex String to search for and replace - Optional
+	-s		String to replace matches - Default is ***** - Optional
+	-b		Blur all images of the report - Optional
+	-t		Shrink all images of the report - HTML only – Optional
+
+These are the arguments for this python script. I'll go over each group:
+
+	python ReportMod.py (--html | --docx) -i InputFile -o OutputFile [-e RegexString] [-s CensorString] [-b] [t]
+
+(--html | --docx)
+These are called flags. To run this program, you must have one or the other. These determine how the script behaves, and it will error out if you feed it a docx file but have the --html flag and ask the script to shrink images!
+
+-i InputFile
+This is your report that you want to make a redacted copy of
+
+-o Output File
+This is where you are dumping the redacted copy to
+
+-e RegexString
+This is the string you are search for to replace. This is the sensitive data!
+
+-s CensorString
+This is what you are replacing the sensitive data with
+
+-b
+A switch to blur images
+
+-t
+A switch to shrink images. Pairing this with the --docx flag will produce errors.
+
+Examples
+
+	python ReportMod.py --html -i "C:\Users\ConchoPecan\Documents\reports\HTMLReport" -o "C:\Users\ConchoPecan\Documents\redacted\HTMLReport" -e "Sensitive Information" -s "*****" -b -t
+	
+This takes a HTML report, prints out a copy to ~/Documents/redacted, replaces "Sensitive Information" (without quotes) with the Censored string, shrinks then blurs images.
+
+	python ReportMod.py --docx -i "C:\Users\ConchoPecan\Documents\reports\CasePaper.docx" -o "C:\Users\ConchoPecan\Documents\redacted\HTMLReport" -e "Sensitive Information" -s "*****" -b
+
+This takes in a docx report, prints out a copy to ~/Documents/redacted, replaces the regex string, and blurs images.
