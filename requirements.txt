@@ -5,3 +5,5 @@ lxml==4.3.4
 Pillow==6.0.0
 Pillow-PIL==0.1.dev0
 TreeSoup==0.1
+pyinstaller
+python-docx
