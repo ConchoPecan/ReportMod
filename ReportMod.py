@@ -10,7 +10,7 @@ import re
 import xml.etree.ElementTree as ET
 from docx import Document
 import argparse
-import time
+import sys
 #from docx.shared import Inches
 
 ################################################################################
@@ -235,7 +235,8 @@ class Docx:
         reg = re.compile(regex)
         doc = Document(ifile)
         if ofile is None:
-            ofile = ifile
+            ofile = osp.splitext(ifile)[0] + '.redacted' \
+                    + osp.splitext(ifile)[1]
         # Search in Paragraphs (normal text in Word)
         for para in doc.paragraphs:
             if reg.search(para.text):
@@ -276,7 +277,8 @@ class Docx:
 #       ShrinkImages() - Takes images in the report and shrinks them
 ################################################################################
 class HTML:
-    #Have to leave out js/css files, as you might modify code!!
+    # Have to leave out js/css files, as you might modify code!!
+    # Add rtf here
     textFiles = ['.html', '.xml', '.txt', '.csv', '.tsv', '.json']
     codeFiles = ['.js', '.css'] # Add these at your risk
     
@@ -362,12 +364,10 @@ if __name__ == '__main__':
 
     if osp.exists(args.OutputReport):
         print("\nOutput Report already exists. Will not overwrite file")
-        exit()
+        sys.exit()
 
     if args.html:
         HTML.SetReports(args.InputReport, args.OutputReport)
-        # Set working directory to Output Report's folder
-        Base.cd(osp.abspath(args.OutputReport))
         if args.RegexString:
             if args.RedactionString:
                 HTML.RedactRegex(args.RegexString, args.RedactionString)
@@ -388,12 +388,12 @@ if __name__ == '__main__':
                     Docx.RedactRegex(tmpReport, args.RegexString,
                                      args.RedactionString, args.OutputReport)
                     os.remove(tmpReport)
-                    exit()
+                    sys.exit()
                 else:
                     Docx.RedactRegex(tmpReport, args.RegexString,
                                      ofile=args.OutputReport)
                     os.remove(tmpReport)
-                    exit()
+                    sys.exit()
             else:
                 if args.RedactionString:
                     Docx.RedactRegex(args.InputReport, args.RegexString,
