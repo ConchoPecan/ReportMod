@@ -1,7 +1,7 @@
 docx==0.2.4
 docx2txt==0.8
 et-xmlfile==1.0.1
-lxml==4.3.4
+lxml==4.9.1
 Pillow==6.0.0
 Pillow-PIL==0.1.dev0
 TreeSoup==0.1
